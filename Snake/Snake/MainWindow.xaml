@@ -1,0 +1,210 @@
+﻿<Window x:Class="Snake.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Snake"
+        mc:Ignorable="d"
+        Title="Q Learning Snake" Height="800" Width="1280"
+        MinWidth="300" MinHeight="300"
+        Background="{StaticResource BackgroundColor}"
+        Foreground="{StaticResource TextColor}"
+        FontFamily="{StaticResource MainFont}"
+        WindowStartupLocation="CenterScreen"
+        Icon="Assets/icon.ico">
+    <Viewbox>
+        <StackPanel>
+            <TextBlock x:Name="GamesCountText" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"
+                   Text=""
+                   FontSize="20"
+                   Margin="5"
+                   Grid.Column="1"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel
+                Grid.Row="0"
+                Grid.Column="0"
+                HorizontalAlignment="Left">
+                    <TextBlock
+                        HorizontalAlignment="Left" 
+                        Text="Rows:"
+                        FontSize="12"
+                        Margin="3"/>
+                    <TextBox
+                        x:Name="RowsTextBox"
+                        Text="20"
+                        FontSize="12"
+                        HorizontalAlignment="Left"
+                        Width="100"
+                        Margin="3"/>
+
+                    <TextBlock
+                        HorizontalAlignment="Left" 
+                        Text="Columns:"
+                        FontSize="12"
+                        Margin="3"/>
+                    <TextBox
+                        x:Name="ColumnsTextBox"
+                        Text="20"
+                        FontSize="12"
+                        HorizontalAlignment="Left"
+                        Width="100"
+                        Margin="3"/>
+
+                    <TextBlock
+                        HorizontalAlignment="Left" 
+                        Text="Number Of Training Games: "
+                        FontSize="12"
+                        Margin="3"/>
+                    <TextBox
+                        x:Name="NumberOfTrainingGamesTextBox"
+                        Text="300"
+                        FontSize="12"
+                        HorizontalAlignment="Left"
+                        Width="100"
+                        Margin="3"/>
+
+                    <TextBlock
+                        HorizontalAlignment="Left" 
+                        Text="Training Speed Delay:"
+                        FontSize="12"
+                        Margin="3"/>
+                    <TextBox
+                        x:Name="TrainingSpeedDelayTextBox"
+                        Text="1"
+                        FontSize="12"
+                        HorizontalAlignment="Left"
+                        Width="100"
+                        Margin="3"/>
+
+                    <TextBlock
+                        HorizontalAlignment="Left" 
+                        Text="Testing Speed Delay:"
+                        FontSize="12"
+                        Margin="3"/>
+                    <TextBox
+                        x:Name="TestingSpeedDelayTextBox"
+                        Text="50"
+                        FontSize="12"
+                        HorizontalAlignment="Left"
+                        Width="100"
+                        Margin="3"/>
+
+                    <TextBlock
+                        HorizontalAlignment="Left" 
+                        Text="Epsilon:"
+                        FontSize="12"
+                        Margin="3"/>
+                    <TextBox
+                        x:Name="EpsilonTextBox"
+                        Text="0.1"
+                        FontSize="12"
+                        HorizontalAlignment="Left"
+                        Width="100"
+                        Margin="3"/>
+
+                    <TextBlock
+                        HorizontalAlignment="Left" 
+                        Text="Learning rate:"
+                        FontSize="12"
+                        Margin="3"/>
+                    <TextBox
+                        x:Name="LearningRateTextBox"
+                        Text="0.1"
+                        FontSize="12"
+                        HorizontalAlignment="Left"
+                        Width="100"
+                        Margin="3"/>
+
+                    <TextBlock
+                        HorizontalAlignment="Left" 
+                        Text="Discount factor:"
+                        FontSize="12"
+                        Margin="3"/>
+                    <TextBox
+                        x:Name="DiscountFactorTextBox"
+                        Text="0.1"
+                        FontSize="12"
+                        HorizontalAlignment="Left"
+                        Width="100"
+                        Margin="3"/>
+
+                    <Grid
+                        Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                            Grid.Column="0"
+                            x:Name="TrainButton"
+                            Content="Train"
+                            HorizontalAlignment="Left"
+                            FontSize="12"
+                            Width="100"
+                            Height="20"
+                            Margin="3"
+                            Click="TrainButton_Click"/>
+
+                        <Button
+                            Grid.Column="1"
+                            x:Name="TestButton"
+                            Content="Test"
+                            HorizontalAlignment="Left"
+                            FontSize="12"
+                            Width="100"
+                            Height="20"
+                            Margin="3"
+                            Click="TestButton_Click"/>  
+                    </Grid>
+                </StackPanel>
+
+                <Border x:Name="GridBorder"
+                Grid.Row="0"
+                Grid.Column="1"
+                BorderBrush="{StaticResource GridLineColor}"
+                BorderThickness="1.5"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                RenderOptions.EdgeMode="Aliased"
+                Margin="20,0,20,20">
+                    <UniformGrid x:Name="GameGrid"
+                         Width="400"
+                         Height="400"
+                         Background="{StaticResource GridBackgroundColor}"
+                         SnapsToDevicePixels="True"
+                         RenderOptions.BitmapScalingMode="HighQuality">
+                    </UniformGrid>
+                </Border>
+
+                <Border x:Name="Overlay"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Background="{StaticResource OverlayColor}"
+                    Width="{Binding Path=ActualWidth, ElementName=GridBorder}"
+                    Height="{Binding Path=ActualHeight, ElementName=GridBorder}"
+                    Margin="{Binding Path=Margin, ElementName=GridBorder}"
+                    RenderOptions.EdgeMode="Aliased">
+                    <TextBlock x:Name="OverlayText"
+                           Text="Press the Train button to start training the agent."
+                           FontSize="26"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"/>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </Viewbox>
+</Window>
